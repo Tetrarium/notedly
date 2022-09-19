@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:javascripteverywhere/api.git"
+    "url": "git+ssh://git@github.com/javascripteverywhere/api.git"
   },
   "nodemonConfig": {
     "ignore": [
@@ -38,6 +38,7 @@
     "marked": "0.7.0",
     "md5": "2.2.1",
     "mongoose": "5.7.13",
+    "node": "^12.14.1",
     "nodemon": "1.18.7",
     "passport": "0.4.0",
     "passport-github2": "0.1.11"
@@ -49,5 +50,9 @@
     "faker": "4.1.0",
     "node-fetch": "2.5.0",
     "prettier": "1.18.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/javascripteverywhere/api/issues"
+  },
+  "homepage": "https://github.com/javascripteverywhere/api#readme"
 }
