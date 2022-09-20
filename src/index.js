@@ -3,24 +3,34 @@
 
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
+require('dotenv').config();
 
+const db = require('./db');
+
+// Импортируем модели БД в приложение
+const models = require('./models');
+
+// Запускаем сервер на порте, указанном в файле .env, или на порте 4000
 const port = process.env.PORT || 4000;
+
+// Сохраняем значение DB_HOST в виде переменной
+const DB_HOST = process.env.DB_HOST;
 
 
 // Построение схемы с использованием языка схем GraphQL
 const typeDefs = gql`
 	type Query {
-		hello: String!
-		notes: [Note!]!
-		note(id: ID!): Note!
+		hello: String
+		notes: [Note]
+		note(id: ID): Note
 	}
 	type Note {
-		id: ID!
-		content: String!
-		author: String!
+		id: ID
+		content: String
+		author: String
 	}
 	type Mutation {
-		newNote(content: String!): Note!
+		newNote(content: String!): Note
 	}
 `;
 
@@ -28,25 +38,28 @@ const typeDefs = gql`
 const resolvers = {
 	Query: {
 		hello: () => 'Hello world!',
-		notes: () => notes,
-		note: (parent, args) => {
-			return notes.find(note => note.id === args.id);
+		notes: async () => {
+			return await models.Note.find();
+		},
+		note: async (parent, args) => {
+			return await models.Note.findById(args.id);
 		}
 	},
 	Mutation: {
-		newNote: (parent, args) => {
-			let noteValue = {
-				id: String(notes.length + 1),
+		newNote: async (parent, args) => {
+			
+			return await models.Note.create({
 				content: args.content,
-				author: 'Alexandr Turov'
-			};
-			notes.push(noteValue);
-			return noteValue;
+				author: "Alexandr Turov"
+			});
 		}
 	}
 };
 
 const app = express();
+
+// Подключаем базу данных
+db.connect(DB_HOST);
 
 
 // Настройка ApolloServer
