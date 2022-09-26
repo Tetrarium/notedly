@@ -27,15 +27,38 @@ const app = express();
 // Подключаем базу данных
 db.connect(DB_HOST);
 
+// Импортируем модуль jsonwebtoken
+const jwt = require('jsonwebtoken');
+
+// Получаем информацию пользователя из JWT
+const getUser = token => {
+	if (token) {
+		try {
+			// Возвращаем информацию пользователя из токена
+			return jwt.verify(token, process.env.JWT_SECRET);
+		} catch (err) {
+			// Если с токеном возникла проблема
+			new Error('Session Invalid')
+		}
+	}
+};
 
 // Настройка ApolloServer
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
-	context: () => {
-		return { models };
+	context: ( { req } ) => {
+		// Получаем токен пользователя из заголовков
+		const token = req.headers.authorization;
+		// Пытаемся извлечь пользователя с помощью токена
+		const user = getUser(token);
+		// Пока что будем выводить информацию о пользователе в консоль
+		console.log(user);
+		return { models, user };
 	}
 });
+
+
 
 // Применяем промежуточное ПО Apollo GraphQL и указываем путь к /api
 server.applyMiddleware({app, path: '/api'});
