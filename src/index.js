@@ -2,6 +2,7 @@
 // This is the main entry point of our application
 
 const express = require('express');
+
 const { ApolloServer } = require('apollo-server-express');
 require('dotenv').config();
 
@@ -29,6 +30,7 @@ db.connect(DB_HOST);
 
 // Импортируем модуль jsonwebtoken
 const jwt = require('jsonwebtoken');
+//  const { Console } = require('console');
 
 // Получаем информацию пользователя из JWT
 const getUser = token => {
@@ -47,7 +49,7 @@ const getUser = token => {
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
-	context: ( { req } ) => {
+	context: ({ req }) => {
 		// Получаем токен пользователя из заголовков
 		const token = req.headers.authorization;
 		// Пытаемся извлечь пользователя с помощью токена
@@ -61,8 +63,8 @@ const server = new ApolloServer({
 
 
 // Применяем промежуточное ПО Apollo GraphQL и указываем путь к /api
-server.applyMiddleware({app, path: '/api'});
+server.applyMiddleware({ app, path: '/api' });
 
-app.listen({ port }, () => 
+app.listen({ port }, () =>
 	console.log(`GrathQL Server running at http://localhost:${port}${server.graphqlPath}`)
 );

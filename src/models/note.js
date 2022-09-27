@@ -3,20 +3,31 @@ const mongoose = require('mongoose');
 
 // Определяем схему БД заметки
 const noteSchema = new mongoose.Schema(
-    {
-        content: {
-            type: String,
-            required: true
-        },
-        author: {
-            type: String,
-            required: true
-        }
-    },
-    {
-        // Присваеваем поля createAt и updateAt с типом данных
-        timestamps: true
-    }
+	{
+		content: {
+			type: String,
+			required: true
+		},
+		author: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User',
+			required: true
+		},
+		favoriteCount: {
+			type: Number,
+			default: 0
+		},
+		favoritedBy: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'User'
+			}
+		]
+	},
+	{
+		// Присваеваем поля createAt и updateAt с типом данных
+		timestamps: true
+	}
 );
 
 // Определяем модель 'Note' со схемой
