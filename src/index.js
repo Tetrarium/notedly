@@ -70,7 +70,6 @@ const server = new ApolloServer({
 });
 
 
-
 // Применяем промежуточное ПО Apollo GraphQL и указываем путь к /api
 server.applyMiddleware({ app, path: '/api' });
 
